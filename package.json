@@ -1,0 +1,26 @@
+{
+  "name": "oss-maintainer-kit",
+  "version": "0.1.0",
+  "description": "A small CLI and template pack for OSS maintainer readiness checks and Codex for Open Source application drafts.",
+  "type": "module",
+  "bin": {
+    "oss-maintainer-kit": "./bin/oss-maintainer-kit.mjs"
+  },
+  "scripts": {
+    "check": "node bin/oss-maintainer-kit.mjs check",
+    "demo": "node bin/oss-maintainer-kit.mjs application . --repo https://github.com/ritsuki36/oss-maintainer-kit --role \"core maintainer\"",
+    "validate": "node --check bin/oss-maintainer-kit.mjs && node bin/oss-maintainer-kit.mjs check ."
+  },
+  "keywords": [
+    "oss",
+    "open-source",
+    "maintainer",
+    "codex",
+    "github"
+  ],
+  "author": "Ritsuki Yano",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  }
+}
