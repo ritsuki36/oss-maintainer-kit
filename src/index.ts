@@ -51,9 +51,14 @@ const checks = [
 const usage = `oss-maintainer-kit
 
 Usage:
-  node src/index.ts check [path]
-  node src/index.ts application [path] --repo <url> --role <text> [--org-id <id>]
-  node src/index.ts template
+  oss-maintainer-kit check [path]
+  oss-maintainer-kit application [path] --repo <url> --role <text> [--org-id <id>]
+  oss-maintainer-kit template
+
+Local source usage:
+  node bin/oss-maintainer-kit.mjs check [path]
+  node bin/oss-maintainer-kit.mjs application [path] --repo <url> --role <text> [--org-id <id>]
+  node bin/oss-maintainer-kit.mjs template
 
 Commands:
   check        Check local OSS repository readiness.

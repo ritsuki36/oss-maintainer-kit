@@ -1,6 +1,9 @@
 # oss-maintainer-kit
 
-A small CLI and template pack for open-source maintainers preparing repository hygiene checks and Codex for Open Source applications.
+[![CI](https://github.com/ritsuki36/oss-maintainer-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/ritsuki36/oss-maintainer-kit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+A small CLI for open-source maintainers who want to check repository readiness and generate a starter Codex for Open Source application draft.
 
 ## Why this exists
 
@@ -11,6 +14,13 @@ Open-source maintainers often need to explain the value of their projects, keep 
 - generates a starter Codex for Open Source application draft
 - works locally without API keys or external dependencies
 
+## Who this is for
+
+- maintainers preparing for Codex for Open Source
+- developers publishing a new OSS repository
+- contributors checking whether a project has basic maintainer files
+- people who want a simple repo health checklist before asking for feedback
+
 ## Install
 
 Clone the repository and run the CLI with Node.js 22 or newer:
@@ -19,6 +29,21 @@ Clone the repository and run the CLI with Node.js 22 or newer:
 git clone https://github.com/ritsuki36/oss-maintainer-kit.git
 cd oss-maintainer-kit
 npm run check -- .
+```
+
+Example output:
+
+```text
+OSS maintainer readiness: oss-maintainer-kit
+Score: 100/100
+
+OK      README - Explains what the project does and how to use it.
+OK      LICENSE - Makes reuse terms clear.
+OK      CONTRIBUTING - Shows contributors how to open issues and pull requests.
+OK      SECURITY - Gives reporters a safe path for vulnerabilities.
+OK      CODE_OF_CONDUCT - Sets community expectations.
+OK      package metadata - Helps users and tools identify the project.
+OK      GitHub Actions - Runs repeatable checks for contributors and maintainers.
 ```
 
 You can also run the source file directly:
