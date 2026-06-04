@@ -9,7 +9,8 @@
   "scripts": {
     "check": "node bin/oss-maintainer-kit.mjs check",
     "demo": "node bin/oss-maintainer-kit.mjs application . --repo https://github.com/ritsuki36/oss-maintainer-kit --role \"core maintainer\"",
-    "validate": "node --check bin/oss-maintainer-kit.mjs && node bin/oss-maintainer-kit.mjs check ."
+    "test": "node test/cli.test.mjs",
+    "validate": "node --check bin/oss-maintainer-kit.mjs && npm test && node bin/oss-maintainer-kit.mjs check ."
   },
   "keywords": [
     "oss",

@@ -51,12 +51,12 @@ const checks = [
 const usage = `oss-maintainer-kit
 
 Usage:
-  oss-maintainer-kit check [path]
+  oss-maintainer-kit check [path] [--format text|json]
   oss-maintainer-kit application [path] --repo <url> --role <text> [--org-id <id>] [--output <file>]
   oss-maintainer-kit template
 
 Local source usage:
-  node bin/oss-maintainer-kit.mjs check [path]
+  node bin/oss-maintainer-kit.mjs check [path] [--format text|json]
   node bin/oss-maintainer-kit.mjs application [path] --repo <url> --role <text> [--org-id <id>] [--output <file>]
   node bin/oss-maintainer-kit.mjs template
 
@@ -72,8 +72,9 @@ function main(args) {
   const command = args[0] ?? "help";
 
   if (command === "check") {
-    const root = resolve(args[1] ?? ".");
-    printCheck(root);
+    const root = resolve(args[1] && !args[1].startsWith("--") ? args[1] : ".");
+    const options = parseOptions(args.slice(args[1] && !args[1].startsWith("--") ? 2 : 1));
+    printCheck(root, options);
     return;
   }
 
@@ -118,13 +119,16 @@ function parseOptions(args) {
     } else if (key === "--output" || key === "-o") {
       options.output = value;
       index += 1;
+    } else if (key === "--format") {
+      options.format = value;
+      index += 1;
     }
   }
 
   return options;
 }
 
-function printCheck(root) {
+function printCheck(root, options = {}) {
   if (!existsSync(root) || !statSync(root).isDirectory()) {
     console.error(`Repository path does not exist: ${root}`);
     process.exitCode = 1;
@@ -132,6 +136,18 @@ function printCheck(root) {
   }
 
   const result = analyzeRepository(root);
+
+  if (options.format === "json") {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  if (options.format && options.format !== "text") {
+    console.error(`Unsupported format: ${options.format}`);
+    console.error("Supported formats: text, json");
+    process.exitCode = 1;
+    return;
+  }
 
   console.log(`OSS maintainer readiness: ${result.name}`);
   console.log(`Path: ${root}`);

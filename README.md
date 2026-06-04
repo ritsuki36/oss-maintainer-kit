@@ -60,6 +60,12 @@ Check a repository:
 node bin/oss-maintainer-kit.mjs check .
 ```
 
+Output JSON for scripts or CI:
+
+```bash
+node bin/oss-maintainer-kit.mjs check . --format json
+```
+
 Generate a Codex for Open Source application draft:
 
 ```bash
@@ -83,6 +89,28 @@ node bin/oss-maintainer-kit.mjs template
 - [`examples/check-output.txt`](examples/check-output.txt)
 - [`examples/application-draft.md`](examples/application-draft.md)
 
+## Use in CI
+
+You can run the checker from GitHub Actions to keep basic maintainer files visible during pull requests.
+
+```yaml
+name: OSS readiness
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node bin/oss-maintainer-kit.mjs check . --format json
+```
+
 ## Commands
 
 ### `check [path]`
@@ -96,6 +124,10 @@ Scores a local repository against simple maintainer-readiness signals:
 - CODE_OF_CONDUCT
 - GitHub Actions workflows
 - package metadata
+
+Options:
+
+- `--format text|json`: print human-readable output or structured JSON
 
 ### `application [path]`
 
