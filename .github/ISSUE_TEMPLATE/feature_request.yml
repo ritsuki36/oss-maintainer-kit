@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest an improvement for OSS maintainer workflows.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Maintainer workflow
+      description: What maintainer task would this improve?
+      placeholder: "For example: preparing a Codex for Open Source application, checking SECURITY.md, generating release notes..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What should the tool do?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional context, examples, or links.

@@ -11,7 +11,7 @@ Open-source maintainers often need to explain the value of their projects, keep 
 
 - checks basic OSS repository readiness
 - highlights missing maintainer-facing files
-- generates a starter Codex for Open Source application draft
+- generates a starter Codex for Open Source application draft you can edit for the 500-character form fields
 - works locally without API keys or external dependencies
 
 ## Who this is for
@@ -66,11 +66,22 @@ Generate a Codex for Open Source application draft:
 node bin/oss-maintainer-kit.mjs application . --repo https://github.com/owner/repo --role "core maintainer"
 ```
 
+Save the draft to a file:
+
+```bash
+node bin/oss-maintainer-kit.mjs application . --repo https://github.com/owner/repo --role "core maintainer" --output draft.md
+```
+
 Print the static application template:
 
 ```bash
 node bin/oss-maintainer-kit.mjs template
 ```
+
+## Examples
+
+- [`examples/check-output.txt`](examples/check-output.txt)
+- [`examples/application-draft.md`](examples/application-draft.md)
 
 ## Commands
 
@@ -95,6 +106,7 @@ Options:
 - `--repo <url>`: repository URL to include in the draft
 - `--role <text>`: your maintainer role
 - `--org-id <id>`: optional OpenAI organization ID placeholder
+- `--output <file>` or `-o <file>`: save the generated draft instead of printing it
 
 ### `template`
 

@@ -1,0 +1,24 @@
+name: Check request
+description: Request a new repository readiness check.
+title: "[Check]: "
+labels: ["check-request"]
+body:
+  - type: input
+    id: file
+    attributes:
+      label: File or signal to check
+      placeholder: "For example: FUNDING.yml, dependabot.yml, release workflow"
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Why this matters
+      description: Explain how this helps OSS maintainers or contributors.
+    validations:
+      required: true
+  - type: textarea
+    id: detection
+    attributes:
+      label: Suggested detection logic
+      description: Optional details about paths, formats, or edge cases.

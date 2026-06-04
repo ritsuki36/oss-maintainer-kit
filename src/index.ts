@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 
 const checks = [
@@ -52,12 +52,12 @@ const usage = `oss-maintainer-kit
 
 Usage:
   oss-maintainer-kit check [path]
-  oss-maintainer-kit application [path] --repo <url> --role <text> [--org-id <id>]
+  oss-maintainer-kit application [path] --repo <url> --role <text> [--org-id <id>] [--output <file>]
   oss-maintainer-kit template
 
 Local source usage:
   node bin/oss-maintainer-kit.mjs check [path]
-  node bin/oss-maintainer-kit.mjs application [path] --repo <url> --role <text> [--org-id <id>]
+  node bin/oss-maintainer-kit.mjs application [path] --repo <url> --role <text> [--org-id <id>] [--output <file>]
   node bin/oss-maintainer-kit.mjs template
 
 Commands:
@@ -115,6 +115,9 @@ function parseOptions(args) {
     } else if (key === "--org-id") {
       options.orgId = value;
       index += 1;
+    } else if (key === "--output" || key === "-o") {
+      options.output = value;
+      index += 1;
     }
   }
 
@@ -161,7 +164,20 @@ function printApplication(root, options) {
   const present = result?.items.filter((item) => item.present).map((item) => item.label).join(", ") || "not checked";
   const scoreLine = result ? `${result.score}/${result.maxScore}` : "not checked";
 
-  console.log(`# Codex for Open Source Application Draft
+  const draft = buildApplicationDraft({ repoName, repositoryUrl, role, orgId, missing, present, scoreLine });
+
+  if (options.output) {
+    const outputPath = resolve(options.output);
+    writeFileSync(outputPath, draft, "utf8");
+    console.log(`Application draft written to ${outputPath}`);
+    return;
+  }
+
+  console.log(draft);
+}
+
+function buildApplicationDraft({ repoName, repositoryUrl, role, orgId, missing, present, scoreLine }) {
+  return `# Codex for Open Source Application Draft
 
 ## Project
 
@@ -193,7 +209,7 @@ If this repository has security-sensitive surfaces, explain them here. Mention d
 ## Anything else
 
 Add concise context that does not fit above.
-`);
+`;
 }
 
 function printTemplate() {

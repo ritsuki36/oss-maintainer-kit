@@ -1,0 +1,13 @@
+OSS maintainer readiness: oss-maintainer-kit
+Path: /path/to/oss-maintainer-kit
+Score: 100/100
+
+OK      README - Explains what the project does and how to use it.
+OK      LICENSE - Makes reuse terms clear.
+OK      CONTRIBUTING - Shows contributors how to open issues and pull requests.
+OK      SECURITY - Gives reporters a safe path for vulnerabilities.
+OK      CODE_OF_CONDUCT - Sets community expectations.
+OK      package metadata - Helps users and tools identify the project.
+OK      GitHub Actions - Runs repeatable checks for contributors and maintainers.
+
+Next step: the basic maintainer files are present. Add project-specific adoption and maintenance evidence to your application draft.
