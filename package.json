@@ -1,8 +1,14 @@
 {
   "name": "oss-maintainer-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A small CLI and template pack for OSS maintainer readiness checks and Codex for Open Source application drafts.",
   "type": "module",
+  "files": [
+    "bin",
+    "src",
+    "templates",
+    "examples"
+  ],
   "bin": {
     "oss-maintainer-kit": "./bin/oss-maintainer-kit.mjs"
   },
@@ -10,7 +16,7 @@
     "check": "node bin/oss-maintainer-kit.mjs check",
     "demo": "node bin/oss-maintainer-kit.mjs application . --repo https://github.com/ritsuki36/oss-maintainer-kit --role \"core maintainer\"",
     "test": "node test/cli.test.mjs",
-    "validate": "node --check bin/oss-maintainer-kit.mjs && npm test && node bin/oss-maintainer-kit.mjs check ."
+    "validate": "node --check bin/oss-maintainer-kit.mjs && node --check src/index.mjs && npm test && node bin/oss-maintainer-kit.mjs check ."
   },
   "keywords": [
     "oss",
@@ -21,7 +27,15 @@
   ],
   "author": "Ritsuki Yano",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ritsuki36/oss-maintainer-kit.git"
+  },
+  "homepage": "https://github.com/ritsuki36/oss-maintainer-kit#readme",
+  "bugs": {
+    "url": "https://github.com/ritsuki36/oss-maintainer-kit/issues"
+  },
   "engines": {
-    "node": ">=22"
+    "node": ">=20"
   }
 }

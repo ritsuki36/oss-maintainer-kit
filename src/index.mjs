@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 
@@ -51,12 +49,12 @@ const checks = [
 const usage = `oss-maintainer-kit
 
 Usage:
-  oss-maintainer-kit check [path] [--format text|json]
+  oss-maintainer-kit check [path] [--format text|json] [--min-score 0-100]
   oss-maintainer-kit application [path] --repo <url> --role <text> [--org-id <id>] [--output <file>]
   oss-maintainer-kit template
 
 Local source usage:
-  node bin/oss-maintainer-kit.mjs check [path] [--format text|json]
+  node bin/oss-maintainer-kit.mjs check [path] [--format text|json] [--min-score 0-100]
   node bin/oss-maintainer-kit.mjs application [path] --repo <url> --role <text> [--org-id <id>] [--output <file>]
   node bin/oss-maintainer-kit.mjs template
 
@@ -66,26 +64,40 @@ Commands:
   template    Print the static application template.
 `;
 
-main(process.argv.slice(2));
+try {
+  main(process.argv.slice(2));
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
 
 function main(args) {
   const command = args[0] ?? "help";
 
   if (command === "check") {
     const root = resolve(args[1] && !args[1].startsWith("--") ? args[1] : ".");
-    const options = parseOptions(args.slice(args[1] && !args[1].startsWith("--") ? 2 : 1));
+    const options = parseOptions(
+      args.slice(args[1] && !args[1].startsWith("--") ? 2 : 1),
+      new Set(["format", "min-score"])
+    );
     printCheck(root, options);
     return;
   }
 
   if (command === "application") {
     const root = resolve(args[1] && !args[1].startsWith("--") ? args[1] : ".");
-    const options = parseOptions(args.slice(args[1] && !args[1].startsWith("--") ? 2 : 1));
+    const options = parseOptions(
+      args.slice(args[1] && !args[1].startsWith("--") ? 2 : 1),
+      new Set(["repo", "role", "org-id", "output"])
+    );
     printApplication(root, options);
     return;
   }
 
   if (command === "template") {
+    if (args.length > 1) {
+      throw new Error(`Unexpected argument: ${args[1]}`);
+    }
     printTemplate();
     return;
   }
@@ -100,29 +112,26 @@ function main(args) {
   process.exitCode = 1;
 }
 
-function parseOptions(args) {
+function parseOptions(args, allowedOptions) {
   const options = {};
+  const aliases = { "-o": "output" };
 
   for (let index = 0; index < args.length; index += 1) {
     const key = args[index];
     const value = args[index + 1];
+    const optionName = aliases[key] ?? key.replace(/^--/, "");
 
-    if (key === "--repo") {
-      options.repo = value;
-      index += 1;
-    } else if (key === "--role") {
-      options.role = value;
-      index += 1;
-    } else if (key === "--org-id") {
-      options.orgId = value;
-      index += 1;
-    } else if (key === "--output" || key === "-o") {
-      options.output = value;
-      index += 1;
-    } else if (key === "--format") {
-      options.format = value;
-      index += 1;
+    if ((!key.startsWith("--") && key !== "-o") || !allowedOptions.has(optionName)) {
+      throw new Error(`Unknown option: ${key}`);
     }
+
+    if (value === undefined || value.startsWith("--") || value === "-o") {
+      throw new Error(`Missing value for ${key}`);
+    }
+
+    const propertyName = optionName.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+    options[propertyName] = value;
+    index += 1;
   }
 
   return options;
@@ -136,9 +145,11 @@ function printCheck(root, options = {}) {
   }
 
   const result = analyzeRepository(root);
+  const minScore = parseMinScore(options.minScore);
 
   if (options.format === "json") {
     console.log(JSON.stringify(result, null, 2));
+    setScoreExitCode(result.score, minScore);
     return;
   }
 
@@ -164,6 +175,28 @@ function printCheck(root, options = {}) {
     console.log("Next step: the basic maintainer files are present. Add project-specific adoption and maintenance evidence to your application draft.");
   } else {
     console.log(`Next step: add ${result.missing.map((item) => item.label).join(", ")} before asking contributors or reviewers to rely on the project.`);
+  }
+
+  setScoreExitCode(result.score, minScore);
+}
+
+function parseMinScore(value) {
+  if (value === undefined) {
+    return null;
+  }
+
+  const minScore = Number(value);
+  if (!Number.isInteger(minScore) || minScore < 0 || minScore > 100) {
+    throw new Error("--min-score must be an integer between 0 and 100");
+  }
+
+  return minScore;
+}
+
+function setScoreExitCode(score, minScore) {
+  if (minScore !== null && score < minScore) {
+    console.error(`Score ${score} is below the required minimum of ${minScore}.`);
+    process.exitCode = 1;
   }
 }
 

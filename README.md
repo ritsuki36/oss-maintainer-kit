@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/ritsuki36/oss-maintainer-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/ritsuki36/oss-maintainer-kit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](package.json)
 
 A small CLI for open-source maintainers who want to check repository readiness and generate a starter Codex for Open Source application draft.
 
@@ -23,7 +24,7 @@ Open-source maintainers often need to explain the value of their projects, keep 
 
 ## Install
 
-Clone the repository and run the CLI with Node.js 22 or newer:
+Clone the repository and run the CLI with Node.js 20 or newer:
 
 ```bash
 git clone https://github.com/ritsuki36/oss-maintainer-kit.git
@@ -49,7 +50,7 @@ OK      GitHub Actions - Runs repeatable checks for contributors and maintainers
 You can also run the source file directly:
 
 ```bash
-node --disable-warning=ExperimentalWarning --experimental-strip-types src/index.ts check /path/to/repo
+node src/index.mjs check /path/to/repo
 ```
 
 ## Usage
@@ -64,6 +65,12 @@ Output JSON for scripts or CI:
 
 ```bash
 node bin/oss-maintainer-kit.mjs check . --format json
+```
+
+Require a minimum score and return a failing exit code when the repository is below it:
+
+```bash
+node bin/oss-maintainer-kit.mjs check . --min-score 80
 ```
 
 Generate a Codex for Open Source application draft:
@@ -107,8 +114,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
-      - run: node bin/oss-maintainer-kit.mjs check . --format json
+          node-version: "20"
+      - run: npx --yes --package=github:ritsuki36/oss-maintainer-kit oss-maintainer-kit check . --format json --min-score 80
 ```
 
 ## Commands
@@ -128,6 +135,7 @@ Scores a local repository against simple maintainer-readiness signals:
 Options:
 
 - `--format text|json`: print human-readable output or structured JSON
+- `--min-score <0-100>`: exit with code `1` when the repository score is below the threshold
 
 ### `application [path]`
 
