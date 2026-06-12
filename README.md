@@ -6,6 +6,29 @@
 
 A small CLI for open-source maintainers who want to check repository readiness and generate a starter Codex for Open Source application draft.
 
+## Quick Start: GitHub Action
+
+Add this workflow to another repository:
+
+```yaml
+name: OSS readiness
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ritsuki36/oss-maintainer-kit@v0.3.0
+        with:
+          min-score: "80"
+```
+
+The action fails when the repository score is below the configured minimum.
+
 ## Why this exists
 
 Open-source maintainers often need to explain the value of their projects, keep maintenance files healthy, and prepare concise application text for support programs. `oss-maintainer-kit` keeps that work lightweight:
@@ -98,7 +121,7 @@ node bin/oss-maintainer-kit.mjs template
 
 ## Use in CI
 
-You can run the checker from GitHub Actions to keep basic maintainer files visible during pull requests.
+The reusable GitHub Action is the recommended way to keep basic maintainer files visible during pull requests.
 
 ```yaml
 name: OSS readiness
@@ -112,11 +135,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: ritsuki36/oss-maintainer-kit@v0.3.0
         with:
-          node-version: "20"
-      - run: npx --yes --package=github:ritsuki36/oss-maintainer-kit oss-maintainer-kit check . --format json --min-score 80
+          path: "."
+          min-score: "80"
+          format: json
 ```
+
+Action inputs:
+
+- `path`: repository path to check, defaults to `.`
+- `min-score`: minimum passing score, defaults to `80`
+- `format`: `text` or `json`, defaults to `text`
 
 ## Commands
 

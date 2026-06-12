@@ -1,13 +1,14 @@
 {
   "name": "oss-maintainer-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A small CLI and template pack for OSS maintainer readiness checks and Codex for Open Source application drafts.",
   "type": "module",
   "files": [
     "bin",
     "src",
     "templates",
-    "examples"
+    "examples",
+    "action.yml"
   ],
   "bin": {
     "oss-maintainer-kit": "./bin/oss-maintainer-kit.mjs"

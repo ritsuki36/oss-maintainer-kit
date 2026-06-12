@@ -16,3 +16,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm run validate
+
+  action-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run local action against healthy fixture
+        uses: ./
+        with:
+          path: test/fixtures/healthy-repo
+          min-score: "100"
+          format: json

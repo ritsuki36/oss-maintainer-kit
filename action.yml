@@ -1,0 +1,36 @@
+name: OSS Maintainer Readiness Check
+description: Check whether a repository has basic open-source maintainer files and enforce a minimum readiness score.
+author: Ritsuki Yano
+
+branding:
+  icon: check-circle
+  color: green
+
+inputs:
+  path:
+    description: Repository path to check.
+    required: false
+    default: "."
+  min-score:
+    description: Minimum readiness score required for the action to pass.
+    required: false
+    default: "80"
+  format:
+    description: Output format. Supported values are text and json.
+    required: false
+    default: "text"
+
+runs:
+  using: composite
+  steps:
+    - name: Check OSS maintainer readiness
+      shell: bash
+      env:
+        OSS_MAINTAINER_KIT_PATH: ${{ inputs.path }}
+        OSS_MAINTAINER_KIT_MIN_SCORE: ${{ inputs.min-score }}
+        OSS_MAINTAINER_KIT_FORMAT: ${{ inputs.format }}
+      run: >-
+        node "$GITHUB_ACTION_PATH/bin/oss-maintainer-kit.mjs"
+        check "$OSS_MAINTAINER_KIT_PATH"
+        --format "$OSS_MAINTAINER_KIT_FORMAT"
+        --min-score "$OSS_MAINTAINER_KIT_MIN_SCORE"
